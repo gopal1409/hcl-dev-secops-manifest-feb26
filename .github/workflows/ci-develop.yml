@@ -32,7 +32,7 @@ jobs:
             - name: build frontend
               run: npm run build #this command builds the frontend application
             - name: upload the frontend artifact 
-              uses: actions/upload-artifact@v3 #this action uploads the built frontend artifact
+              uses: actions/upload-artifact@v4 #this action uploads the built frontend artifact
               with:
                 name: frontend-build
                 path: ./frontend/build
