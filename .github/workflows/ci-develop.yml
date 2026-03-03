@@ -40,6 +40,7 @@ jobs:
     # backend Job
     # ============
     backend:
+        needs: frontend #this job will run after the frontend job is completed
         name: Spring Boot Backend CI
         runs-on: ubuntu-latest #this is the runner that will execute the job
         defaults:
