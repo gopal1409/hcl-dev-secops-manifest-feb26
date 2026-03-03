@@ -36,3 +36,30 @@ jobs:
               with:
                 name: frontend-build
                 path: frontend/dist
+    # ============
+    # backend Job
+    # ============
+    backend:
+        name: Spring Boot Backend CI
+        runs-on: ubuntu-latest #this is the runner that will execute the job
+        defaults:
+            run:
+                working-directory: ./backend #this is the directory where the frontend code is located 
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3 #this action checks out the code from the repository
+            - name: Set up Java
+              uses: actions/setup-java@v4 #this action sets up the Node.js environment
+              with:
+                distribution: 'temurin'
+                java-version: '17' #this is the version of Java that we want to use
+                cache: maven #this caches the Maven dependencies to speed up the build process
+            - name: Run Unit Tests
+              run: mvn test #this command installs the Jest testing framework as a dev dependency
+            - name: build backend
+              run: mvn clean package -DskipTests #this command builds the frontend application
+            - name: upload the backend artifact 
+              uses: actions/upload-artifact@v4 #this action uploads the built frontend artifact
+              with:
+                name: backend-jar
+                path: backend/target/*.jar
