@@ -13,7 +13,7 @@ jobs:
     frontend:
         name: React Frontend CI
         runs-on: ubuntu-latest #this is the runner that will execute the job
-        default:
+        defaults:
             run:
                 working-directory: ./frontend #this is the directory where the frontend code is located 
         steps:
