@@ -56,11 +56,17 @@ jobs:
                 distribution: 'temurin'
                 java-version: '17' #this is the version of Java that we want to use
                 cache: maven #this caches the Maven dependencies to speed up the build process
+            - name: Run AppScan CodeSweep
+              uses: HCL-TECH-SOFTWARE/appscan-codesweep-action@v2.1
+              env: 
+                  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
             - name: Run Unit Tests
+              if: success()
               run: mvn test #this command installs the Jest testing framework as a dev dependency
             - name: build backend
               run: mvn clean package -DskipTests #this command builds the frontend application
             - name: upload the backend artifact 
+              if: success() #this step will only run if the previous steps were successful
               uses: actions/upload-artifact@v4 #this action uploads the built frontend artifact
               with:
                 name: backend-jar
