@@ -42,8 +42,20 @@ jobs:
     # ============
     # backend Job
     # ============
+    scan:
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+          with:
+            fetch-depth: 0
+        - name: Run AppScan CodeSweep
+          uses: HCL-TECH-SOFTWARE/appscan-codesweep-action@v2.1
+      env: 
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     backend:
-        needs: frontend #this job will run after the frontend job is completed
+        needs: scan #this job will run after the frontend job is completed
+        if: needs.scan.result == 'success' #this job will only run if the scan job was successful
         name: Spring Boot Backend CI
         runs-on: ubuntu-latest #this is the runner that will execute the job
         defaults:
@@ -58,10 +70,7 @@ jobs:
                 distribution: 'temurin'
                 java-version: '17' #this is the version of Java that we want to use
                 cache: maven #this caches the Maven dependencies to speed up the build process
-            - name: Run AppScan CodeSweep
-              uses: HCL-TECH-SOFTWARE/appscan-codesweep-action@v2.1
-              env: 
-                  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
             - name: Run Unit Tests
               if: success()
               run: mvn test #this command installs the Jest testing framework as a dev dependency
