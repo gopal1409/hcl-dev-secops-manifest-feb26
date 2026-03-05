@@ -19,7 +19,9 @@ jobs:
                 working-directory: ./frontend #this is the directory where the frontend code is located 
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3 #this action checks out the code from the repository
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0 #this command checks out the code from the repository with full history, which is necessary for some actions that require access to the commit history
             - name: Set up Node.js
               uses: actions/setup-node@v3 #this action sets up the Node.js environment
               with:
