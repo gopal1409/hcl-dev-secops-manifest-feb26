@@ -12,7 +12,8 @@ jobs:
     # ============
     frontend:
         name: React Frontend CI
-        runs-on: ubuntu-latest #this is the runner that will execute the job
+        #runs-on: ubuntu-latest #this is the runner that will execute the job
+        runs-on: self-hosted  #this is the runner that will execute the job
         defaults:
             run:
                 working-directory: ./frontend #this is the directory where the frontend code is located 
