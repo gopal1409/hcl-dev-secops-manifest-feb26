@@ -3,9 +3,9 @@ name: Full Stack CI - Develop
 #this workflow will execute on push or pull request to main or develop branches
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, security ]
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main, develop, security ]
 jobs:
     # ============
     # Frontend Job
