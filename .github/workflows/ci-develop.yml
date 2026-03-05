@@ -6,6 +6,7 @@ on:
     branches: [ main, develop, security ]
   pull_request:
     branches: [ main, develop, security ]
+    types: [opened,synchronize]
 jobs:
     # ============
     # Frontend Job
