@@ -61,38 +61,7 @@ jobs:
           id: severity
           run: |
             echo "level=medium" >> $GITHUB_OUTPUT
-    critical-gate: 
-        needs: scan #this job will run after the frontend job is completed
-        if: needs.scan.outputs.severity == 'critical' #this job will only run if the scan job was successful
-        runs-on: ubuntu-latest
-        steps:
-            - name: Fail if critical vulnerabilities are found
-              run: |
-                echo "Critical vulnerabilities found. Failing the build."
-                exit 1
-                #if critical valunrabiltiy is foun then it will fail the buidl process              
-    high-approival: 
-        needs: scan #this job will run after the frontend job is completed
-        runs-on: ubuntu-latest
-        if: needs.scan.outputs.severity == 'high' #this job will only run if the scan job was successful
-        
-        envrionment:
-          name: security-approval
-        steps:
-            - name: waiting for security approval 
-              run: echo "High severity vulnerabilities found. Waiting for security approval."
-                #if critical valunrabiltiy is foun then it will fail the buidl process                   
-    warning-gate: 
-         needs: scan #this job will run after the frontend job is completed
-         runs-on: ubuntu-latest
-         if: needs.scan.outputs.severity == 'low' || needs.scan.outputs.severity == 'medium' #this job will only run if the scan job was successful
-        
-         steps:
-            - name: Warning message
-              run: echo "low valnurability detected but build will continue with warning message"
-                 #if cri
-    #tical valunrabiltiy is foun then it will fail the buidl process                   
-
+    
     backend:
         needs: scan #this job will run after the frontend job is completed
         if: needs.scan.result == 'success' #this job will only run if the scan job was successful
