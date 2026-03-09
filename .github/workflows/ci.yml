@@ -169,7 +169,7 @@ jobs:
           zap-baseline.py \
           -t http://localhost:8080/enquiries \
           -J zap-report.json \
-          -r zap-report.html
+          -r zap-report.html -I
 
       # -----------------------------
       # Check for Critical Vulnerabilities
