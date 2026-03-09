@@ -83,20 +83,24 @@ jobs:
       - uses: aquasecurity/setup-trivy@v0.2.0
       # Security Gate Critical Only 
       - name: Scan Frontend Image Fail on Critical
+        id: critical_scan
+        continue-on-error: true
         run: |
-          trivy image --severity CRITICAL --exit-code 0 \
+          trivy image --severity CRITICAL --exit-code 1 \
           no-progress frontend-image
-          trivy image --severity CRITICAL --exit-code 0 \
+          trivy image --severity CRITICAL --exit-code 1 \
           no-progress backend-image
           
 
       # Scan Images
       - name: Scan Frontend Image(Full Report)
+        if: always()
         run: |
           trivy image --severity CRITICAL,HIGH,MEDIUM,LOW \
           --format sarif -o trivy-results.sarif frontend-image
 
       - name: Scan Backend Image(Full Report)
+        if: always()
         run: |
           trivy image --severity CRITICAL,HIGH,MEDIUM,LOW \
           --format sarif -o trivy-results.sarif backend-image
