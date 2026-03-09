@@ -126,7 +126,7 @@ jobs:
 
   dast-test:
     runs-on: ubuntu-latest
-    needs: run-container
+    needs: docker-build-scan
 
     steps:
 
