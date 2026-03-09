@@ -61,3 +61,64 @@ jobs:
           cd backend
           mvn clean package
 
+# -----------------------------
+# Docker Build + Scan
+# -----------------------------
+
+  docker-build-scan:
+    runs-on: ubuntu-latest
+    needs: [frontend-build, backend-build]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build Images
+      - name: Build Frontend Image
+        run: docker build -t frontend-image ./frontend
+
+      - name: Build Backend Image
+        run: docker build -t backend-image ./backend
+
+      # Install Trivy
+      - uses: aquasecurity/setup-trivy@v0.2.0
+      # Security Gate Critical Only 
+      - name: Scan Frontend Image Fail on Critical
+        run: |
+          trivy image --severity CRITICAL --exit-code 1 \
+          no-progress frontend-image
+
+      - name: Scan Backend Image fail on Critical
+        run: |
+          trivy image --severity CRITICAL --exit-code 1 \
+          no-progress backend-image
+
+      # Scan Images
+      - name: Scan Frontend Image(Full Report)
+        run: |
+          trivy image --severity CRITICAL,HIGH,MEDIUM,LOW \
+          --format sarif -o trivy-results.sarif frontend-image
+
+      - name: Scan Backend Image(Full Report)
+        run: |
+          trivy image --severity CRITICAL,HIGH,MEDIUM,LOW \
+          --format sarif -o trivy-results.sarif backend-image
+
+      
+      # Docker login
+      - name: Docker Login
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login \
+          -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      # Tag images
+      - name: Tag Images
+        run: |
+          docker tag backend-image $BACKEND_IMAGE:${{ github.sha }}
+          docker tag frontend-image $FRONTEND_IMAGE:${{ github.sha }}
+
+      # Push images
+      - name: Push Images
+        run: |
+          docker push $BACKEND_IMAGE:${{ github.sha }}
+          docker push $FRONTEND_IMAGE:${{ github.sha }}
+
