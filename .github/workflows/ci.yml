@@ -167,7 +167,7 @@ jobs:
           -v $(pwd):/zap/wrk \
           ghcr.io/zaproxy/zaproxy:stable \
           zap-baseline.py \
-          -t http://localhost:8080 \
+          -t http://localhost:8080/enquiries \
           -J zap-report.json \
           -r zap-report.html
 
